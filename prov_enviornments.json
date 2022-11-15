@@ -1,0 +1,66 @@
+{
+  "environments": [
+    // Configuración del entorno de producción (los shcedulers se programan por separado en cada entorno)
+    { 
+      "name": "production",
+      "configOverride": {
+        "defaultDatabase": "sea-produccion" //sobrescribimos el nombre del proyecto por defecto
+      },
+      "schedules": [
+        {
+          "name": "deltas",
+          "cron": "5 */1 * * *",
+          "tags": [
+            "deltas"
+          ],
+          "disabled": false,
+          "notify": [
+            {
+              "channel": "notificacion_para_errores",
+              "statuses": [
+                "FAILURE"
+              ]
+            }
+          ]
+        }
+      ],
+      "gitRef": "1d2723ba26347704021d62914ba71ec1f1d55c6c" // referencia GIT de la que bebe producción
+    },
+    // Configuración del entorno de desarrollo (los shcedulers se programan por separado en cada entorno)
+    {
+      "name": "Desarrollo",
+      "schedules": [
+        {
+          "name": "deltas_daily",
+          "cron": "5 6 * * *",
+          "tags": [
+            "deltas_daily"
+          ],
+          "disabled": false
+        }
+      ],
+      "gitRef": "master" // Desarrollo bebe del ultimo commit del master
+    }
+  ],
+  // Configuración canales de notificación
+  "notificationChannels": [
+    {
+      "name": "notificacion_para_success",
+      "email": {
+        "to": [
+          "tucuentadecorreo@altostratus.es",
+          "cuentadelcliente@tucliente.es"
+        ]
+      }
+    },
+    {
+      "name": "notificacion_para_errores",
+      "email": {
+        "to": [
+          "tucuentadecorreo@altostratus.es",
+          "cuentadelcliente@tucliente.es"
+        ]
+      }
+    }
+  ]
+}

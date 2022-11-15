@@ -1,0 +1,10 @@
+config {
+  type: "table",
+  schema: constants.DB_POSTGRE,
+  name: "federated_query",
+  tags:["postgre_db"],
+  }
+
+SELECT * 
+FROM EXTERNAL_QUERY("projects/your_project/locations/eu/connections/posgre_db_name", 
+'SELECT CAST(id AS VARCHAR), name, "code", active, "linearSchema", created_at, updated_at, deleted, old_id FROM branch;')

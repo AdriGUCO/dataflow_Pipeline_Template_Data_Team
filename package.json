@@ -1,0 +1,6 @@
+{
+  "name": "Pipeline_Template_Data_Team",
+  "dependencies": {
+    "@dataform/core": "2.0.1"
+  }
+}

@@ -1,0 +1,10 @@
+/* Guides: https://cloud.google.com/dataform/docs/declare-source */
+
+/* You can declare one data source per a SQLX declaration file */
+
+config {
+  type: "declaration",
+  database:"bigquery-public-data", // project ID of the project which contains the data source.
+  schema: "san_francisco_bikeshare", // BigQuery dataset in which the data source exists.
+  name: "bikeshare_station_info", // Name of the table or view that you want to use as the data source. You can later use that name to reference the data source in Dataform.
+  }

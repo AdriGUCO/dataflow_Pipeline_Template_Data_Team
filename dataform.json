@@ -1,0 +1,8 @@
+{
+  "defaultSchema": "dataform",
+  "assertionSchema": "dataform_assertions",
+  "warehouse": "bigquery",
+  "defaultDatabase": "lineage-alt-test", // cambiar el nombre del proyecto para hacer runs en el proyecto de producción
+  "defaultLocation": "EU"
+}
+    

@@ -1,0 +1,10 @@
+config {
+  type: "table",
+  schema: constants.DS_STAGING,
+  name: "stg_bikeshare_regions",
+  tags: ["bikeshare"]
+}
+
+select
+  *
+from ${ref('bikeshare_regions')}
