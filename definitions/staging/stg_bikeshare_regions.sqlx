@@ -1,10 +1,26 @@
+/* https://cloud.google.com/dataform/docs/tables */
+
+
+
+
 config {
   type: "table",
   schema: constants.DS_STAGING,
   name: "stg_bikeshare_regions",
+  // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
   tags: ["bikeshare"]
 }
 
+pre_operations {  -- IF NEEDED: SQL operations to execute before the query 
+                  -- https://cloud.google.com/dataform/docs/configure-execution#execute-sql-before-table
+}
+
+post_operations { -- IF NEEDED: SQL operations to execute after the query
+                  -- https://cloud.google.com/dataform/docs/configure-execution#execute-sql-after-table
+}
+
+
+/* QUERY */
 select
   *
 from ${ref('bikeshare_regions')}

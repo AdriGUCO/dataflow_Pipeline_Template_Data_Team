@@ -1,0 +1,17 @@
+EL SCHEDULING Y EL OVERRIDE POR DEV/PROD SE REALIZAN EXTERNAMENTE A DATFORM (AL CONTRARIO QUE CON LA APLICACIÓN ORIGINA)
+
+
+Schedule executions with Workflows and Cloud Scheduler:
+https://cloud.google.com/dataform/docs/schedule-executions-workflows
+
+Schedule executions with Cloud Composer:
+https://cloud.google.com/dataform/docs/schedule-executions-composer
+
+https://cloud.google.com/dataform/docs/compilation-overrides
+
+Monitor execution logs:
+https://cloud.google.com/dataform/docs/execution-logs
+
+https://cloud.google.com/dataform/docs/audit-logging
+
+
