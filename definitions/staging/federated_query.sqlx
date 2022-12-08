@@ -1,3 +1,6 @@
+/* FEDERATED QUERY EXAMPLE FROM A CLOUD SQL DATABASE: 
+IS NOT WORKING BUT THE STRUCTURE IS CORRECT*/
+
 config {
   type: "table",
   schema: constants.DB_POSTGRE,

@@ -4,7 +4,7 @@
 config {
   type: "table",
   schema: constants.DS_STAGING,
-  name: "stg_bikeshare_regions",
+  name: "stg_bikeshare_station_info",
   // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
   tags: ["bikeshare", "staging"]
 }
@@ -21,4 +21,4 @@ post_operations { -- IF NEEDED: SQL operations to execute after the query
 /* QUERY */
 SELECT 
   * 
-FROM ${ref('bikeshare_regions')}
+FROM ${ref('bikeshare_station_info')}

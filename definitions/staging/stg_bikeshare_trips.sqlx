@@ -1,13 +1,16 @@
-/* https://cloud.google.com/dataform/docs/tables */
-
-
 config {
-  type: "table",
+  type: "incremental",
   schema: constants.DS_STAGING,
-  name: "stg_bikeshare_regions",
+  name: "stg_bikeshare_trips",
+  tags: ["bikeshare","staging","incremental"],
   // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
-  tags: ["bikeshare", "staging"]
+  uniqueKey: ["Trip_id",  "start_date"],
+  bigquery: {
+    partitionBy: "TIMESTAMP_TRUNC(start_date, DAY)",
+    updatePartitionFilter: `start_date >= ${constants.PARTITION_FILTER_FLUJO}`
+  }
 }
+
 
 pre_operations {  -- IF NEEDED: SQL operations to execute before the query 
                   -- https://cloud.google.com/dataform/docs/configure-execution#execute-sql-before-table
@@ -17,8 +20,7 @@ post_operations { -- IF NEEDED: SQL operations to execute after the query
                   -- https://cloud.google.com/dataform/docs/configure-execution#execute-sql-after-table
 }
 
-
-/* QUERY */
-SELECT 
-  * 
-FROM ${ref('bikeshare_regions')}
+SELECT
+  *
+FROM ${ref('bikeshare_trips')} 
+${when(incremental(), `WHERE start_date > ${constants.PARTITION_FILTER_DAILY}`)}
