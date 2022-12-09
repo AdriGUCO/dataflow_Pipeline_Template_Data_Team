@@ -3,54 +3,24 @@
 config {
   type: "view",
   materialized: true,
-  description: "top 10 bike trips per hour average trip duration by hour on top 10 origin station",
+  description: "top 10 bike trips per hour",
   schema: constants.DS_STAGING,
-  name: "origin_top_10_average_trip",
-  tags: ["bikeshare", "staging"],
+  name: "top_100_trips_per_hour",
+  tags: ["bikeshare", "bi"],
   // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
   // dependencies: ["unreferenced_table"] // dependencies are tables that are not referenced in a ref function in the SELECT statement but needed to be executed before. 
-  
-  /* https://cloud.google.com/dataform/docs/document-tables */
-  /* columns: {
-    column1_name: "Description of the first column",
-    column2_name: {
-      description: "some description",
-      bigqueryPolicyTags: ["projects/example-project/locations/us/taxonomies/123456789/policyTags/123456789"]
-    } "Description of the second column",
-    column3_name: "Description of the third column",
-    record_name: {
-      description: "Description of the record.",
-      columns: {
-       record_column1_name: "Description of the first record column",
-       record_column2_name: "Description of the second record column",
-      }
-    }
+  columns: {
+    timestamp: "date",
+    avg_duration_min: "average trip duration for this date and origin hour",
+    trip_count: "number of trips per origin hour",
   }
-  bigquery:{
-    
-  }*/
 }
-
-pre_operations {  -- IF NEEDED: SQL operations to execute before the query 
-                  -- https://cloud.google.com/dataform/docs/configure-execution#execute-sql-before-table
-}
-
-post_operations { -- IF NEEDED: SQL operations to execute after the query
-                  -- https://cloud.google.com/dataform/docs/configure-execution#execute-sql-after-table
-}
-
 
 /* QUERY */
- SELECT
-                        EXTRACT(HOUR FROM start_date) AS hour_of_day,
-                        AVG(duration_sec/60) AS avg_trip_length_mins
-                     FROM
-                        ${ref('stg_bikeshare_trips')}
-                     WHERE
-                        start_date >= '2018-03-06'
-                        AND start_date <= '2018-03-08'
-                        AND start_station_name = 'Lake Merritt BART Station'
-                     GROUP BY
-                        hour_of_day
-                     ORDER BY
-                        hour_of_day     
+SELECT 
+  timestamp,
+  avg_duration_min,
+  trip_count
+FROM `lineage-alt-test.dataform_template_datateam_2.inc_historical_ride_lenght_and_amount` 
+ORDER BY trip_count DESC
+LIMIT 100   

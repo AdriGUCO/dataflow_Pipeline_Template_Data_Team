@@ -9,7 +9,7 @@ config {
   description: "average ride length and amount hourly",
   schema: constants.DS_STAGING,
   name: "inc_historical_ride_lenght_and_amount",
-  tags: ["bikeshare", "staging", "incremental"],
+  tags: ["bikeshare", "transformations", "incremental"],
   // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
   // dependencies: ["unreferenced_table"] // dependencies are tables that are not referenced in a ref function in the SELECT statement but needed to be executed before. 
   bigquery: {
