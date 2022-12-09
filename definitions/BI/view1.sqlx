@@ -21,6 +21,6 @@ SELECT
   timestamp,
   avg_duration_min,
   trip_count
-FROM `lineage-alt-test.dataform_template_datateam_2.inc_historical_ride_lenght_and_amount` 
+FROM ${ref(`inc_historical_ride_lenght_and_amount`)}
 ORDER BY trip_count DESC
 LIMIT 100   
