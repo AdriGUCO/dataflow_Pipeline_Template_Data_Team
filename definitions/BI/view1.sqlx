@@ -2,15 +2,19 @@
 
 config {
   type: "view",
-  materialized: true,
+  materialized: false,
   description: "top 10 bike trips per hour",
-  schema: constants.DS_STAGING,
+  schema: constants.DS_BI,
   name: "top_100_trips_per_hour",
   tags: ["bikeshare", "bi"],
   // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
-  // dependencies: ["unreferenced_table"] // dependencies are tables that are not referenced in a ref function in the SELECT statement but needed to be executed before. 
+  dependencies: [ // dependencies are tables that are not referenced in a ref function in the SELECT statement but needed to be executed before:
+    // setting an assertion as a dependency ensures that the tables is not generated if the assertion fails  
+    "dataform_template_datateam_2_inc_historical_ride_lenght_and_amount_assertions_rowConditions", //built-in assertion in the transformation table
+    "check_num_datatypes" //custom assertion
+    ],
   columns: {
-    timestamp: "date",
+    TS: "date",
     avg_duration_min: "average trip duration for this date and origin hour",
     trip_count: "number of trips per origin hour",
   }
@@ -18,7 +22,7 @@ config {
 
 /* QUERY */
 SELECT 
-  timestamp,
+  TS,
   avg_duration_min,
   trip_count
 FROM ${ref(`inc_historical_ride_lenght_and_amount`)}

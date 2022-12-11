@@ -6,8 +6,8 @@ config {
   // disabled: true, // Prevents Dataform from creating/compiling this table in BigQuery while keeps the table in the dependency graph.
   uniqueKey: ["station_id","last_reported"],
   bigquery: {
-    partitionBy: "TIMESTAMP_TRUNC(TIMESTAMP_SECONDS(last_reported) AS last_reported_TS, DAY)",
-    updatePartitionFilter: `TS >= ${constants.PARTITION_FILTER_FLUJO}`
+    partitionBy: "TIMESTAMP_TRUNC(last_reported_TS, DAY)",
+    updatePartitionFilter: `last_reported_TS >= ${constants.PARTITION_FILTER}`
   }
 }
 
@@ -24,4 +24,4 @@ SELECT
   *, 
   TIMESTAMP_SECONDS(last_reported) AS last_reported_TS --Adding TS equivalent recognition and querying 
 FROM ${ref('bikeshare_station_status')} 
-${when(incremental(), `WHERE TIMESTAMP_SECONDS(last_reported) > ${constants.PARTITION_FILTER_DAILY}`)}
+${when(incremental(), `WHERE TIMESTAMP_SECONDS(last_reported) > ${constants.PARTITION_FILTER}`)}

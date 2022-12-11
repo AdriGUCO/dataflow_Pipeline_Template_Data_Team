@@ -1,0 +1,17 @@
+/* https://cloud.google.com/dataform/docs/assertions#manual */
+
+config { 
+  type: "assertion",
+  name: "check_num_datatypes",
+  description: "chek if duration and trip count are numeric datatypes for table inc_historical_ride_lenght_and_amount"
+}
+
+SELECT
+  column_name, data_type
+FROM
+  `lineage-alt-test.dataform_template_datateam_2.INFORMATION_SCHEMA.COLUMNS`
+WHERE
+  table_name IN('inc_historical_ride_lenght_and_amount') 
+AND 
+  column_name IN('avg_duration_min', 'trip_count')
+AND data_type NOT IN ('FLOAT64', 'INT64')

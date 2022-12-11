@@ -1,8 +1,8 @@
 {
-  "defaultSchema": "dataform",
-  "assertionSchema": "dataform_assertions",
   "warehouse": "bigquery",
   "defaultDatabase": "lineage-alt-test",
+  "defaultSchema": "dataform",
+  "assertionSchema": "dataform_template_datateam_2",
   "defaultLocation": "US"
 }
     

@@ -5,7 +5,7 @@
 
 config {
   type: "incremental",
-  uniqueKey: ["timestamp"],
+  uniqueKey: ["TS"],
   description: "average ride length and amount hourly",
   schema: constants.DS_STAGING,
   name: "inc_historical_ride_lenght_and_amount",
@@ -14,12 +14,12 @@ config {
   // dependencies: ["unreferenced_table"] // dependencies are tables that are not referenced in a ref function in the SELECT statement but needed to be executed before. 
   bigquery: {
     labels: {
-      department: "data engineering",
-      "query author": "Adria Guerrero", 
+      department: "data_engineering",
+      query_author: "adria_guerrero", 
     },
-    partitionBy: "DATE(INPUT_TS)",
+    partitionBy: "DATE(TS)",
     // requirePartitionFilter : true,
-    updatePartitionFilter: `start_date >= ${constants.PARTITION_FILTER_FLUJO}` // set to only consider a subset of records and avoid Dataform scanning the whole table to find matching rows.
+    updatePartitionFilter: `TS >= ${constants.PARTITION_FILTER_FLUJO}` // set to only consider a subset of records and avoid Dataform scanning the whole table to find matching rows.
     // partitionExpirationDays: 14,
     // clusterBy: ["name", "revenue"]
   },
@@ -40,8 +40,16 @@ config {
       }
     } 
   */  
+  }, 
+  assertions: {
+    uniqueKey: ["TS"],
+    nonNull: ["TS", "INPUT_TS"],
+    rowConditions: [ 
+      'TS > "1950-01-01"',
+      'avg_duration_min > 0',
+      'trip_count > 0'
+    ]
   }
-  
 }
 
 pre_operations {  -- IF NEEDED: SQL operations to execute before the query 
@@ -55,13 +63,12 @@ post_operations { -- IF NEEDED: SQL operations to execute after the query
 /* QUERY */
 SELECT
   CURRENT_TIMESTAMP() AS INPUT_TS,
-  TIMESTAMP_TRUNC (start_date, HOUR) AS timestamp,
+  TIMESTAMP_TRUNC (start_date, HOUR) AS TS,
   ROUND(AVG(duration_sec/60), 2) AS avg_duration_min,
   COUNT(*) AS trip_count
 FROM
   ${ref(`stg_bikeshare_trips`)}
-${when(incremental(), `WHERE start_date >= (SELECT TIMESTAMP_SUB(MAX(timestamp), interval 2 HOUR) FROM ${self()})`)}
--- ${when(incremental(), `WHERE start_date > ${constants.PARTITION_FILTER_DAILY}`)}
+${when(incremental(), `WHERE TIMESTAMP_TRUNC (start_date, HOUR) >= (SELECT TIMESTAMP_SUB(MAX(TS), interval 2 HOUR) FROM ${self()})`)}
+-- ${when(incremental(), `WHERE TIMESTAMP_TRUNC (start_date, HOUR) > ${constants.PARTITION_FILTER_DAILY}`)}
 GROUP BY 
-  timestamp
-
+  TS
