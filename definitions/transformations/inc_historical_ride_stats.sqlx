@@ -19,7 +19,7 @@ config {
     },
     partitionBy: "DATE(TS)",
     // requirePartitionFilter : true,
-    updatePartitionFilter: `TS >= ${constants.PARTITION_FILTER_FLUJO}` // set to only consider a subset of records and avoid Dataform scanning the whole table to find matching rows.
+    updatePartitionFilter: `TS >= ${constants.PARTITION_FILTER}` // set to only consider a subset of records and avoid Dataform scanning the whole table to find matching rows.
     // partitionExpirationDays: 14,
     // clusterBy: ["name", "revenue"]
   },
@@ -69,6 +69,6 @@ SELECT
 FROM
   ${ref(`stg_bikeshare_trips`)}
 ${when(incremental(), `WHERE TIMESTAMP_TRUNC (start_date, HOUR) >= (SELECT TIMESTAMP_SUB(MAX(TS), interval 2 HOUR) FROM ${self()})`)}
--- ${when(incremental(), `WHERE TIMESTAMP_TRUNC (start_date, HOUR) > ${constants.PARTITION_FILTER_DAILY}`)}
+-- ${when(incremental(), `WHERE TIMESTAMP_TRUNC (start_date, HOUR) > ${constants.PARTITION_FILTER}`)}
 GROUP BY 
   TS
